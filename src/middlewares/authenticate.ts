@@ -14,7 +14,7 @@ declare global {
 
 const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies?.accessToken || req.headers.authorization?.split(' ')[1];
-
+  console.log('I am inside auth');
   if (!token) return res.status(401).json({ message: 'No token provided' });
 
   try {

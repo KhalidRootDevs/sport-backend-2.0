@@ -33,6 +33,5 @@ export const generateRandomId = (length: number) => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
     counter += 1;
   }
-  console.log(result);
-  return result;
+  return +result;
 };

@@ -1,18 +1,23 @@
 import cookieParser from 'cookie-parser';
 import express, { Application, Request, Response } from 'express';
-import cors from './config/cors';
+import cors, { CorsOptions } from 'cors';
 import router from './router';
 import { redisCache } from './services/redis';
 import { monksFootballV3Data } from './services/sportsApi/sportMonkV3';
 import { errorMiddleware, loggerMiddleware, notFoundMiddleware } from './utils/logger';
+import configs from './config/cors';
 
 const app: Application = express();
+const env = process.env.NODE_ENV || 'development';
+
+// @ts-ignore
+const corsOptions: CorsOptions = configs[env].corsOptions;
 
 // Middleware
+app.use(cors(corsOptions));
 app.use(loggerMiddleware);
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors);
 
 // Root Route
 app.get('/', (req: Request, res: Response) => {

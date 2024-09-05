@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const notificationSchema = z.object({
-  id: z.number(),
+  id: z.number().optional(),
   title: z.string(),
   body: z.string(),
   image: z.string().optional(),

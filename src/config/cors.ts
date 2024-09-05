@@ -1,19 +1,54 @@
-import cors from 'cors';
+import { config } from 'dotenv';
+config();
 
-const allowedOrigins = ['http://localhost:3000', 'https://your-production-domain.com'];
+export interface CorsOptions {
+  origin: string[];
+  credentials: boolean;
+}
 
-const corsOptions: cors.CorsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+interface Config {
+  corsOptions: CorsOptions;
+  databaseURI: string | undefined;
+  redisURI: string | undefined;
+  port: string | number;
+  apiKey: string | undefined;
+  appSecret: string | undefined;
+}
+
+interface Configs {
+  development: Config;
+  production: Config;
+}
+
+const configs: Configs = {
+  development: {
+    corsOptions: {
+      origin: [
+        'http://localhost:3005',
+        'http://localhost:3000',
+        'http://192.168.66.116:3000',
+        process.env.CORS_ORIGINS || '',
+        '*',
+      ],
+      credentials: true,
+    },
+    databaseURI: process.env.DEV_DATABASE_URL,
+    redisURI: process.env.DEV_REDIS_URI,
+    port: process.env.PORT || 8000,
+    apiKey: process.env.API_KEY,
+    appSecret: process.env.APP_SECRET,
   },
-  methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-  credentials: true, // Allow cookies with CORS
-  optionsSuccessStatus: 204, // Some legacy browsers choke on 204
+  production: {
+    corsOptions: {
+      origin: [process.env.CORS_ORIGINS || ''],
+      credentials: true,
+    },
+    databaseURI: process.env.PROD_DATABASE_URL,
+    redisURI: process.env.PROD_REDIS_URI,
+    port: process.env.PORT || 8000,
+    apiKey: process.env.API_KEY,
+    appSecret: process.env.APP_SECRET,
+  },
 };
 
-export default cors(corsOptions);
+export default configs;

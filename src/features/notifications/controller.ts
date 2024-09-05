@@ -4,11 +4,17 @@ import { querySchema } from '../../types';
 import { handleResponse } from '../../utils/helper'; // Adjust the path as necessary
 import Notification from './model';
 import { notificationSchema } from './validator';
+import { generateRandomId } from '../../utils';
 
 // Create a new notification
 export const createNotification = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const notificationData = notificationSchema.parse(req.body);
+    const notificationPayload = {
+      ...req.body,
+      id: generateRandomId(11),
+    };
+
+    const notificationData = notificationSchema.parse(notificationPayload);
 
     const notification = await dbActions.create(Notification, notificationData);
     res.status(201).json(handleResponse(201, 'Notification created successfully', notification));
@@ -26,7 +32,7 @@ export const getAllNotifications = async (req: Request, res: Response, next: Nex
     const query: any = {};
 
     if (search) {
-      query.email = new RegExp(search, 'i');
+      query.title = new RegExp(search, 'i');
     }
 
     const notifications = await dbActions.readAll(Notification, {
