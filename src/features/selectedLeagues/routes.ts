@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../middlewares/authenticate';
 import {
+  allSelectedLeagues,
   createSelectedLeague,
   deleteSelectedLeague,
   getAllSelectedLeagues,
@@ -10,8 +11,9 @@ import {
 
 const router = Router();
 
+router.get('/every', allSelectedLeagues);
+router.get('/all', getAllSelectedLeagues);
 router.post('/create', authenticate, createSelectedLeague);
-router.get('/all', authenticate, getAllSelectedLeagues);
 router.get('/find/:id', authenticate, getSelectedLeagueById);
 router.put('/update/:id', authenticate, updateSelectedLeague);
 router.delete('/delete/:id', authenticate, deleteSelectedLeague);

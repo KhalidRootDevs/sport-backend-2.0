@@ -3,9 +3,11 @@ config();
 
 import { NextFunction, Request, Response } from 'express';
 import { allSelectedLeagues } from '../../features/selectedLeagues/controller';
+import { dbActions } from '../../db/dbActions';
+import SelectedLeagues from '../../features/selectedLeagues/model';
 
 const baseUrl = process.env.SPORTMONKS_FOOTBALL_URL || '';
-const authorizationToken = process.env.SPORTMONKS_API_TOKEN || '';
+const authorizationToken = process.env.SPORTMONKS_TOKEN || '';
 
 export async function fetchFootballData(endpoint: string) {
   const url = `${baseUrl}${endpoint}`;
@@ -36,7 +38,9 @@ export async function monksFootballV3Data(req: Request, res: Response, next: Nex
   try {
     if (urlEndpoint.includes('leagues')) {
       const data = await fetchFootballData(mainUrl);
-      const selectedLeagues = await allSelectedLeagues();
+      const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
+        sort: { position: 1 },
+      });
 
       const filteredLeagues = selectedLeagues?.reduce((result: any[], selectedLeague: any) => {
         const matchingLeagues = data?.response?.filter(

@@ -11,6 +11,7 @@ import selectedLeaguesRoutes from '../features/selectedLeagues/routes';
 import notificationsRoutes from '../features/notifications/routes';
 import streamingSourcesRoutes from '../features/stream/routes';
 import userRoutes from '../features/user/routes';
+import sportsMonkRoutes from '../features/sportsMonk/routes';
 
 const router = Router();
 
@@ -25,5 +26,7 @@ router.use('/highlights', highlightRoutes);
 router.use('/news', newsRoutes);
 router.use('/selected-leagues', selectedLeaguesRoutes);
 router.use('/notifications', notificationsRoutes);
+
+router.use('/sport-monk', sportsMonkRoutes);
 
 export default router;

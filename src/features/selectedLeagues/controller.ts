@@ -6,14 +6,16 @@ import SelectedLeagues from './model';
 import { selectedLeaguesSchema } from './validator';
 
 // Get all selected leagues
-export const allSelectedLeagues = async () => {
+export const allSelectedLeagues = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
       sort: { position: 1 },
     });
-    return selectedLeagues || [];
+
+    res.status(201).json(handleResponse(201, 'Every Selected league fetched', selectedLeagues));
   } catch (error) {
     console.error(error);
+    next(error);
   }
 };
 
@@ -22,6 +24,18 @@ export const createSelectedLeague = async (req: Request, res: Response, next: Ne
   try {
     const selectedLeagueData = selectedLeaguesSchema.parse(req.body);
 
+    // Check if the league already exists in the database
+    const existingLeague = await dbActions.read(SelectedLeagues, {
+      query: { id: selectedLeagueData.id },
+    });
+
+    if (existingLeague) {
+      return res
+        .status(409) // 409 Conflict status code
+        .json(handleResponse(409, 'League has already been added', existingLeague));
+    }
+
+    // If not, proceed to create the new league
     const selectedLeague = await dbActions.create(SelectedLeagues, selectedLeagueData);
     res
       .status(201)
@@ -101,7 +115,7 @@ export const updateSelectedLeague = async (req: Request, res: Response, next: Ne
 export const deleteSelectedLeague = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const deletedSelectedLeague = await dbActions.delete(SelectedLeagues, {
-      query: { _id: req.params.id },
+      query: { id: req.params.id },
     });
     if (!deletedSelectedLeague) {
       return res.status(404).json(handleResponse(404, 'Selected league not found'));
