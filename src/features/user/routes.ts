@@ -9,7 +9,6 @@ const router = Router();
 router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
 router.post('/forgot-password', userController.forgotPassword);
-// router.use(authenticate);
 router.get('/refresh', userController.refreshToken);
 router.post('/logout', userController.logoutUser);
 router.get('/me', userController.getUserProfile);

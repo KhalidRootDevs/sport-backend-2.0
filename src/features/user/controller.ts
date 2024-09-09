@@ -46,7 +46,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 1 * 60 * 1000,
+      maxAge: 15 * 60 * 1000,
     }); // 1 minutes
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -92,7 +92,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       res.cookie('accessToken', newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 1 * 60 * 1000,
+        maxAge: 15 * 60 * 1000,
       }); // 1 minutes
 
       res.status(200).json(handleResponse(200, 'Token Refreshed', { accessToken: newAccessToken }));

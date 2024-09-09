@@ -4,7 +4,7 @@ import { UserRole } from '../features/user/model';
 export const generateToken = (userId: string, role: UserRole, type: 'access' | 'refresh') => {
   const secret =
     type === 'access' ? process.env.ACCESS_TOKEN_SECRET : process.env.REFRESH_TOKEN_SECRET;
-  const expiresIn = type === 'access' ? '1m' : '7d';
+  const expiresIn = type === 'access' ? '15m' : '7d';
 
   return jwt.sign({ userId, role }, secret as string, { expiresIn });
 };
