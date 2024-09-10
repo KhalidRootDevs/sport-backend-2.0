@@ -5,7 +5,7 @@ import { getFixtureMonks, searchLeagues } from './controller';
 const router = Router();
 
 // Get formatted fixture
-router.get('/fixtures/formatted', getFixtureMonks);
+router.post('/fixtures/formatted', getFixtureMonks);
 
 router.get('/leagues/search', searchLeagues);
 

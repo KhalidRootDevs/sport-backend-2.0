@@ -1,9 +1,10 @@
 import { config } from 'dotenv';
-import mongoose from 'mongoose';
-
 config();
 
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/my-project';
+import mongoose from 'mongoose';
+
+
+const mongoURI = process.env.DEV_DATABASE_URL || 'mongodb://localhost:27017/my-project';
 
 const connectDB = async () => {
   try {

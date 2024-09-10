@@ -13,18 +13,50 @@ export const getFixtureMonks = async (req: Request, res: Response, next: NextFun
       return res.status(400).json(handleResponse(400, 'Date is required'));
     }
 
-    let page = 50;
+    let page: number = 1, hasMore: boolean = true, fixtures: any[] = [], groupByLeague: any = {};
 
-    const response = await fetchFootballData(
-      `/fixtures/date/${date}?include=league.country;round.stage;participants;state;scores;periods&page=${page}`
-    );
-
+    try {
+      while (hasMore) {
+        const response = await fetchFootballData(
+          `/fixtures/date/${date}?include=league.country;round.stage;participants;state;scores;periods&${page}` // ?include=league.country;round.stage;participants;state;scores;periods&
+        );
+        // console.log(response)
+        fixtures = [...fixtures, ...response?.data];
+        hasMore = response?.data?.pagination?.has_more;
+        page += 1;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    console.log(fixtures);
     // Fetch selected leagues from the database
     const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
       sort: { position: 1 },
     });
+    console.log(selectedLeagues)
+    const filteredFixtures = selectedLeagues.reduce((result, selectedLeague) => {
+      const matchingFixtures = fixtures?.filter((fixture) => selectedLeague.id === fixture.league.id);
+      return result.concat(matchingFixtures);
+    }, []);
 
-    res.status(200).json(handleResponse(200, 'Formatted fixture list', response));
+    filteredFixtures.forEach((fixture: any) => {
+      if (groupByLeague[fixture.league.id] !== undefined) {
+        groupByLeague[fixture.league.id].push(fixture);
+      } else {
+        groupByLeague[fixture.league.id] = [];
+        groupByLeague[fixture.league.id].push(fixture);
+      }
+    });
+
+    const sortedKeys = Object.keys(groupByLeague).sort();
+
+    const sortedObj: any = {};
+
+    sortedKeys.forEach((key) => {
+      sortedObj[key] = groupByLeague[key];
+    });
+
+    res.status(200).json(handleResponse(200, 'Formatted fixture list', sortedObj));
   } catch (error) {
     console.error('Error fetching fixtures:', error);
     next(error);
