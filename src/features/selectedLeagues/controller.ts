@@ -126,3 +126,23 @@ export const deleteSelectedLeague = async (req: Request, res: Response, next: Ne
     next(error);
   }
 };
+
+
+export const sortByPosition = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = req.body;
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json(handleResponse(400, 'Body Is Empty'));
+    }
+    await Promise.all(data.league.map((l: any) => {
+      dbActions.update(SelectedLeagues, {
+        query: { id: l.id },
+        update: { position: l.position },
+      });
+    }));
+    return res.status(200).json(handleResponse(200, 'Leagues sorted successfully'));
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

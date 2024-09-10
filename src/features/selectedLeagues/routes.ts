@@ -6,12 +6,14 @@ import {
   deleteSelectedLeague,
   getAllSelectedLeagues,
   getSelectedLeagueById,
+  sortByPosition,
   updateSelectedLeague,
 } from './controller';
 
 const router = Router();
 
 router.get('/every', allSelectedLeagues);
+router.patch("/sortBy", authenticate, sortByPosition);
 router.get('/all', getAllSelectedLeagues);
 router.post('/create', authenticate, createSelectedLeague);
 router.get('/find/:id', authenticate, getSelectedLeagueById);
