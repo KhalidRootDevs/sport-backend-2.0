@@ -13,18 +13,53 @@ export const getFixtureMonks = async (req: Request, res: Response, next: NextFun
       return res.status(400).json(handleResponse(400, 'Date is required'));
     }
 
-    let page = 50;
+    let page: number = 1,
+      hasMore: boolean = true,
+      fixtures: any[] = [],
+      data: any[] = [];
 
-    const response = await fetchFootballData(
-      `/fixtures/date/${encodeURIComponent(date)}?include=league.country;round.stage;participants;state;scores;periods&page=${page}`
-    );
+    try {
+      while (hasMore) {
+        const response = await fetchFootballData(
+          `/fixtures/date/${date}?include=league.country;round.stage;participants;state;scores;periods&${page}`
+        );
 
-    // // Fetch selected leagues from the database
-    // const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
-    //   sort: { position: 1 },
-    // });
+        fixtures = [...fixtures, ...response?.data];
+        hasMore = response?.data?.pagination?.has_more;
+        page += 1;
+      }
+    } catch (err) {
+      console.log(err);
+    }
 
-    res.status(200).json(handleResponse(200, 'Formatted fixture list', response));
+    // Fetch selected leagues from the database
+    const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
+      sort: { position: 1 },
+    });
+
+    const selectedLeagueIds = new Set(selectedLeagues.map((l) => l.id));
+
+    const leagueMap: { [key: string]: any } = {};
+
+    fixtures.forEach((fixture) => {
+      const leagueId = fixture.league.id;
+
+      if (selectedLeagueIds.has(leagueId)) {
+        if (!leagueMap[leagueId]) {
+          leagueMap[leagueId] = {
+            id: leagueId,
+            name: fixture.league.name,
+            image: fixture.league.image_path,
+            fixtures: [],
+          };
+        }
+        leagueMap[leagueId].fixtures.push(fixture);
+      }
+    });
+
+    data = Object.values(leagueMap);
+
+    res.status(200).json(handleResponse(200, 'Formatted fixture list', data));
   } catch (error) {
     console.error('Error fetching fixtures:', error);
     next(error);
