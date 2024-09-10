@@ -2,7 +2,6 @@ import { config } from 'dotenv';
 config();
 
 import { NextFunction, Request, Response } from 'express';
-import { allSelectedLeagues } from '../../features/selectedLeagues/controller';
 import { dbActions } from '../../db/dbActions';
 import SelectedLeagues from '../../features/selectedLeagues/model';
 
@@ -26,7 +25,9 @@ export async function fetchFootballData(endpoint: string) {
     throw new Error(`Failed to fetch data: ${response.statusText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+
+  return data;
 }
 
 export async function monksFootballV3Data(req: Request, res: Response, next: NextFunction) {

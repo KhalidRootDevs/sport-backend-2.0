@@ -16,13 +16,13 @@ export const getFixtureMonks = async (req: Request, res: Response, next: NextFun
     let page = 50;
 
     const response = await fetchFootballData(
-      `/fixtures/date/${date}?include=league.country;round.stage;participants;state;scores;periods&page=${page}`
+      `/fixtures/date/${encodeURIComponent(date)}?include=league.country;round.stage;participants;state;scores;periods&page=${page}`
     );
 
-    // Fetch selected leagues from the database
-    const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
-      sort: { position: 1 },
-    });
+    // // Fetch selected leagues from the database
+    // const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
+    //   sort: { position: 1 },
+    // });
 
     res.status(200).json(handleResponse(200, 'Formatted fixture list', response));
   } catch (error) {
