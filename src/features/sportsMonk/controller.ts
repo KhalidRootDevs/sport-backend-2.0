@@ -5,6 +5,7 @@ import { handleResponse } from '../../utils/helper';
 import { fetchFootballData } from '../../services/sportsApi/sportMonkV3';
 import SelectedLeagues from '../selectedLeagues/model';
 
+
 export const getFixtureMonks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { date } = req.body;
@@ -13,14 +14,14 @@ export const getFixtureMonks = async (req: Request, res: Response, next: NextFun
       return res.status(400).json(handleResponse(400, 'Date is required'));
     }
 
-    let page: number = 1, hasMore: boolean = true, fixtures: any[] = [], groupByLeague: any = {};
+    let page: number = 1, hasMore: boolean = true, fixtures: any[] = [], data: any[] = [];
 
     try {
       while (hasMore) {
         const response = await fetchFootballData(
-          `/fixtures/date/${date}?include=league.country;round.stage;participants;state;scores;periods&${page}` // ?include=league.country;round.stage;participants;state;scores;periods&
+          `/fixtures/date/${date}?include=league.country;round.stage;participants;state;scores;periods&${page}`
         );
-        // console.log(response)
+
         fixtures = [...fixtures, ...response?.data];
         hasMore = response?.data?.pagination?.has_more;
         page += 1;
@@ -28,35 +29,36 @@ export const getFixtureMonks = async (req: Request, res: Response, next: NextFun
     } catch (err) {
       console.log(err);
     }
-    console.log(fixtures);
+
     // Fetch selected leagues from the database
     const selectedLeagues = await dbActions.readEvery(SelectedLeagues, {
       sort: { position: 1 },
     });
-    console.log(selectedLeagues)
-    const filteredFixtures = selectedLeagues.reduce((result, selectedLeague) => {
-      const matchingFixtures = fixtures?.filter((fixture) => selectedLeague.id === fixture.league.id);
-      return result.concat(matchingFixtures);
-    }, []);
 
-    filteredFixtures.forEach((fixture: any) => {
-      if (groupByLeague[fixture.league.id] !== undefined) {
-        groupByLeague[fixture.league.id].push(fixture);
-      } else {
-        groupByLeague[fixture.league.id] = [];
-        groupByLeague[fixture.league.id].push(fixture);
+    const selectedLeagueIds = new Set(selectedLeagues.map((l) => l.id));
+
+    const leagueMap: { [key: string]: any } = {};
+
+    fixtures.forEach((fixture) => {
+      const leagueId = fixture.league.id;
+
+      if (selectedLeagueIds.has(leagueId)) {
+        if (!leagueMap[leagueId]) {
+          leagueMap[leagueId] = {
+            id: leagueId,
+            name: fixture.league.name,
+            image: fixture.league.image_path,
+            fixtures: [],
+          };
+        }
+        leagueMap[leagueId].fixtures.push(fixture);
       }
     });
 
-    const sortedKeys = Object.keys(groupByLeague).sort();
+    data = Object.values(leagueMap);
 
-    const sortedObj: any = {};
 
-    sortedKeys.forEach((key) => {
-      sortedObj[key] = groupByLeague[key];
-    });
-
-    res.status(200).json(handleResponse(200, 'Formatted fixture list', sortedObj));
+    res.status(200).json(handleResponse(200, 'Formatted fixture list', data));
   } catch (error) {
     console.error('Error fetching fixtures:', error);
     next(error);
