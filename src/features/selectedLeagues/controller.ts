@@ -129,21 +129,25 @@ export const deleteSelectedLeague = async (req: Request, res: Response, next: Ne
 
 export const sortByPosition = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = req.body;
-    if (Object.keys(data).length === 0) {
-      return res.status(400).json(handleResponse(400, 'Body Is Empty'));
+    const { league } = req.body;
+
+    if (!league || league.length === 0) {
+      return res.status(400).json(handleResponse(400, 'Request body is empty or invalid'));
     }
+
     await Promise.all(
-      data.league.map((l: any) => {
-        dbActions.update(SelectedLeagues, {
-          query: { id: +l.id },
-          update: { position: +l.position },
+      league.map(async (league: { id: string; position: number }) => {
+        const sortedLeagues = await SelectedLeagues.findByIdAndUpdate(league.id, {
+          position: league.position,
         });
+        console.log('Updated', sortedLeagues);
+        return sortedLeagues;
       })
     );
+
     return res.status(200).json(handleResponse(200, 'Leagues sorted successfully'));
-  } catch (err) {
-    console.log(err);
-    next(err);
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 };
