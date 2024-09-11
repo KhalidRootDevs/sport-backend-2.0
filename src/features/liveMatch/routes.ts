@@ -6,6 +6,7 @@ import {
   deleteLiveMatch,
   getLiveMatch,
   getLiveMatches,
+  sortLiveMatches,
   updateLiveMatch,
   updateMatchOrder,
 } from './controller';
@@ -33,6 +34,8 @@ router.put(
   authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),
   updateLiveMatch
 );
+
+router.patch("/sort", authenticate, authorizeRoles(([UserRole.ADMIN, UserRole.MODERATOR])), sortLiveMatches);
 
 // Route to delete a live match
 router.delete('/delete/:id', authenticate, deleteLiveMatch);

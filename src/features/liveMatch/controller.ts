@@ -182,3 +182,24 @@ export const updateMatchOrder = async (req: Request, res: Response, next: NextFu
     next(error);
   }
 };
+
+
+export const sortLiveMatches = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = req.body;
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json(handleResponse(400, 'Body Is Empty'));
+    }
+    const matches = data.matches;
+    await Promise.all(matches.map((match: any) => {
+      dbActions.update(LiveMatch, {
+        query: { id: match.id },
+        update: { position: match.poisiton }
+      });
+    }));
+    res.status(200).json(handleResponse(200, 'Live matches sorted successfully'));
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};

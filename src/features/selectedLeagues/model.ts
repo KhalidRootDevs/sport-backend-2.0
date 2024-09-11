@@ -17,10 +17,6 @@ const selectedLeaguesSchema = new Schema<SelectedLeaguesDocument>(
     logo: { type: String, required: true },
     status: { type: String, default: '1' },
     position: { type: Number, default: 9999999 },
-  },
-  {
-    timestamps: true,
-    versionKey: false,
   }
 );
 

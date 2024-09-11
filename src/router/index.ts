@@ -14,6 +14,7 @@ import userRoutes from '../features/user/routes';
 import sportsMonkRoutes from '../features/sportsMonk/routes';
 import rapidApiRoute from "../features/rapidFootball/route";
 import cricbuzzApiRoute from "../features/cricbuzz/route";
+import selectedTemRoutes from "../features/selectedTeams/route";
 
 const router = Router();
 
@@ -27,6 +28,7 @@ router.use('/general-settings', generalSettingsRoutes);
 router.use('/highlights', highlightRoutes);
 router.use('/news', newsRoutes);
 router.use('/selected-leagues', selectedLeaguesRoutes);
+router.use('/selected-temas', selectedTemRoutes);
 router.use('/notifications', notificationsRoutes);
 router.use("/rapid-football", rapidApiRoute);
 router.use("/cricbuzz", cricbuzzApiRoute);

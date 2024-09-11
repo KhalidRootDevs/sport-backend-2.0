@@ -29,9 +29,6 @@ const generalSettingSchema = new Schema<IGeneralSettings>(
     instagram: { type: String, default: '' },
     site_logo: { type: String, default: '' },
     site_icon: { type: String, default: '' },
-  },
-  {
-    timestamps: true,
   }
 );
 
