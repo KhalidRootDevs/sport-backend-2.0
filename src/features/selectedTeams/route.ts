@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticate, authorizeRoles } from "../../middlewares/authenticate";
 import { UserRole } from "../user/model";
-import { createTeam, deleteTeam, getAllTeams, getTeamById, sortTeams, updateTeam } from "./controller";
+import { createTeam, deleteTeam, getAllTeams, getTeamById, searchTeams, sortTeams, updateTeam } from "./controller";
 
 const router = Router();
 
@@ -12,5 +12,7 @@ router.post('/create', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MO
 router.get('/find/:id', authenticate, getTeamById);
 router.put('/update/:id', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), updateTeam);
 router.delete('/delete/:id', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), deleteTeam);
+router.get('/search', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), searchTeams);
+
 
 export default router;

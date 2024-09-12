@@ -1,12 +1,14 @@
 import { Router } from 'express';
-import { authenticate } from '../../middlewares/authenticate';
+import { authenticate, authorizeRoles } from '../../middlewares/authenticate';
 import {
   createHighlight,
+  deleteAllHighlights,
   deleteHighlight,
   getAllHighlights,
   getHighlightById,
   updateHighlight,
 } from './controller';
+import { UserRole } from '../user/model';
 
 const router = Router();
 
@@ -24,5 +26,7 @@ router.put('/update/:id', authenticate, updateHighlight);
 
 // Delete a highlight by ID
 router.delete('/delete/:id', authenticate, deleteHighlight);
+
+router.delete("/deleta-all", authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), deleteAllHighlights);
 
 export default router;

@@ -204,3 +204,16 @@ export const sortLiveMatches = async (req: Request, res: Response, next: NextFun
     next(err);
   }
 };
+
+
+export const deleteAllMatch = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await dbActions.deleteMany(LiveMatch, {
+      query: {}
+    });
+    res.status(200).json(handleResponse(200, 'All matches deleted successfully'));
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

@@ -6,6 +6,7 @@ import {
   deleteSelectedLeague,
   getAllSelectedLeagues,
   getSelectedLeagueById,
+  searchLeagues,
   sortByPosition,
   updateSelectedLeague,
 } from './controller';
@@ -20,5 +21,6 @@ router.post('/create', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MO
 router.get('/find/:id', authenticate, getSelectedLeagueById);
 router.put('/update/:id', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), updateSelectedLeague);
 router.delete('/delete/:id', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), deleteSelectedLeague);
+router.get('/search', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), searchLeagues);
 
 export default router;

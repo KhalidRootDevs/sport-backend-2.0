@@ -79,3 +79,16 @@ export const deleteNotification = async (req: Request, res: Response, next: Next
     next(error);
   }
 };
+
+
+export const deleteAllNotifications = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await dbActions.deleteMany(Notification, {
+      query: {}
+    });
+    res.status(200).json(handleResponse(200, 'All notifications deleted successfully'));
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

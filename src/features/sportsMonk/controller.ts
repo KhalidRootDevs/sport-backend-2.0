@@ -65,20 +65,3 @@ export const getFixtureMonks = async (req: Request, res: Response, next: NextFun
     next(error);
   }
 };
-
-export const searchLeagues = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const search_query = req.query.q as string;
-
-    if (!search_query) {
-      return res.status(400).json(handleResponse(400, 'Search query is required', null));
-    }
-
-    const { data } = await fetchFootballData(`/leagues/search/${encodeURIComponent(search_query)}`);
-
-    res.status(200).json(handleResponse(200, 'League search results', data));
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-};

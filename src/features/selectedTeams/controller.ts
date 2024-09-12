@@ -3,6 +3,7 @@ import { selectedTeamSchema } from './validator';
 import { handleResponse } from '../../utils/helper';
 import { dbActions } from '../../db/dbActions';
 import SelectedTeam from './model';
+import { fetchFootballData } from '../../services/sportsApi/sportMonkV3';
 
 const CREATE_ALLOWED = new Set([
   'id',
@@ -144,5 +145,24 @@ export const sortTeams = async (req: Request, res: Response, next: NextFunction)
   } catch (err) {
     console.log(err);
     next(err);
+  }
+};
+
+
+
+export const searchTeams = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const search_query = req.query.q as string;
+
+    if (!search_query) {
+      return res.status(400).json(handleResponse(400, 'Search query is required', null));
+    }
+
+    const { data } = await fetchFootballData(`/teams/search/${encodeURIComponent(search_query)}`);
+
+    res.status(200).json(handleResponse(200, 'Teams search results', data));
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 };

@@ -6,6 +6,7 @@ import {
   deletePlayer,
   getAllPlayers,
   getPlayerById,
+  searchPlayers,
   sortPlayers,
   updatePlayer,
 } from './controller';
@@ -39,5 +40,7 @@ router.delete(
   authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),
   deletePlayer
 );
+
+router.get('/search', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), searchPlayers);
 
 export default router;

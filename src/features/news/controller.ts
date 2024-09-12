@@ -73,3 +73,16 @@ export const deleteNews = async (req: Request, res: Response, next: NextFunction
     next(error);
   }
 };
+
+
+export const deleteAllNews = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await dbActions.deleteMany(News, {
+      query: {}
+    });
+    res.status(200).json(handleResponse(200, 'All news items deleted successfully'));
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};

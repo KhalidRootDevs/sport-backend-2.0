@@ -3,6 +3,7 @@ import { authenticate, authorizeRoles } from '../../middlewares/authenticate';
 import { UserRole } from '../user/model';
 import {
   createLiveMatch,
+  deleteAllMatch,
   deleteLiveMatch,
   getLiveMatch,
   getLiveMatches,
@@ -41,5 +42,7 @@ router.patch("/sort", authenticate, authorizeRoles(([UserRole.ADMIN, UserRole.MO
 router.delete('/delete/:id', authenticate, deleteLiveMatch);
 
 router.put('/sort/order', authenticate, updateMatchOrder);
+
+router.delete("/deleta-all", authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), deleteAllMatch);
 
 export default router;
