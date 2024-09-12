@@ -20,7 +20,7 @@ export const getLiveMatches = async (req: Request, res: Response, next: NextFunc
   try {
     const matches = await dbActions.readAll(LiveMatch, {
       query,
-      sort: { position: 1 }, // Sort by position in ascending order
+      sort: { position: 1 },
       pagination: { page, limit },
     });
 
@@ -158,31 +158,6 @@ export const deleteLiveMatch = async (req: Request, res: Response, next: NextFun
   }
 };
 
-export const updateMatchOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const matches = req.body;
-
-    if (!Array.isArray(matches)) {
-      return res.status(400).json(handleResponse(400, 'Invalid data format'));
-    }
-
-    // Iterate over each match and update its position
-    await Promise.all(
-      matches.map(async (match: { _id: string; position: number }) => {
-        await dbActions.update(LiveMatch, {
-          query: { _id: match._id },
-          update: { position: match.position },
-        });
-      })
-    );
-
-    res.status(200).json(handleResponse(200, 'Live matches sorted successfully'));
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-};
-
 export const sortLiveMatches = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = req.body;
@@ -191,9 +166,9 @@ export const sortLiveMatches = async (req: Request, res: Response, next: NextFun
     }
     const matches = data.matches;
     await Promise.all(
-      matches.map((match: any) => {
+      matches.map(async (match: any) => {
         dbActions.update(LiveMatch, {
-          query: { id: match.id },
+          query: { _id: match.id },
           update: { position: match.position },
         });
       })
@@ -205,11 +180,10 @@ export const sortLiveMatches = async (req: Request, res: Response, next: NextFun
   }
 };
 
-
 export const deleteAllMatch = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await dbActions.deleteMany(LiveMatch, {
-      query: {}
+      query: {},
     });
     res.status(200).json(handleResponse(200, 'All matches deleted successfully'));
   } catch (err) {

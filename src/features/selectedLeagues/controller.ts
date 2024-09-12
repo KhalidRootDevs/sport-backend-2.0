@@ -141,7 +141,6 @@ export const sortByPosition = async (req: Request, res: Response, next: NextFunc
         const sortedLeagues = await SelectedLeagues.findByIdAndUpdate(league.id, {
           position: league.position,
         });
-        console.log('Updated', sortedLeagues);
         return sortedLeagues;
       })
     );
@@ -153,7 +152,6 @@ export const sortByPosition = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-
 export const searchLeagues = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const search_query = req.query.q as string;
@@ -163,7 +161,10 @@ export const searchLeagues = async (req: Request, res: Response, next: NextFunct
     }
 
     const { data } = await fetchFootballData(`/leagues/search/${encodeURIComponent(search_query)}`);
-    const filtered = data.length > 0 ? data.map((d: any) => ({ id: d.id, name: d.name, logo: d.image_path })) : data;
+    const filtered =
+      data.length > 0
+        ? data.map((d: any) => ({ id: d.id, name: d.name, logo: d.image_path }))
+        : data;
 
     res.status(200).json(handleResponse(200, 'League search results', filtered));
   } catch (error) {

@@ -26,7 +26,7 @@ export const getAllNews = async (req: Request, res: Response, next: NextFunction
     const query: any = {};
 
     if (search) {
-      query.email = new RegExp(search, 'i');
+      query.title = new RegExp(search, 'i');
     }
 
     const newsItems = await dbActions.readAll(News, {
@@ -74,11 +74,10 @@ export const deleteNews = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-
 export const deleteAllNews = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await dbActions.deleteMany(News, {
-      query: {}
+      query: {},
     });
     res.status(200).json(handleResponse(200, 'All news items deleted successfully'));
   } catch (err) {

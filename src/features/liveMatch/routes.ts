@@ -9,7 +9,6 @@ import {
   getLiveMatches,
   sortLiveMatches,
   updateLiveMatch,
-  updateMatchOrder,
 } from './controller';
 
 const router = Router();
@@ -36,13 +35,21 @@ router.put(
   updateLiveMatch
 );
 
-router.patch("/sort", authenticate, authorizeRoles(([UserRole.ADMIN, UserRole.MODERATOR])), sortLiveMatches);
+router.patch(
+  '/sort',
+  authenticate,
+  authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),
+  sortLiveMatches
+);
 
 // Route to delete a live match
 router.delete('/delete/:id', authenticate, deleteLiveMatch);
 
-router.put('/sort/order', authenticate, updateMatchOrder);
-
-router.delete("/deleta-all", authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), deleteAllMatch);
+router.delete(
+  '/delete-all',
+  authenticate,
+  authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),
+  deleteAllMatch
+);
 
 export default router;
