@@ -163,8 +163,9 @@ export const searchLeagues = async (req: Request, res: Response, next: NextFunct
     }
 
     const { data } = await fetchFootballData(`/leagues/search/${encodeURIComponent(search_query)}`);
+    const filtered = data.length > 0 ? data.map((d: any) => ({ id: d.id, name: d.name, logo: d.image_path })) : data;
 
-    res.status(200).json(handleResponse(200, 'League search results', data));
+    res.status(200).json(handleResponse(200, 'League search results', filtered));
   } catch (error) {
     console.error(error);
     next(error);

@@ -30,7 +30,7 @@ router.use('/general-settings', generalSettingsRoutes);
 router.use('/highlights', highlightRoutes);
 router.use('/news', newsRoutes);
 router.use('/selected-leagues', selectedLeaguesRoutes);
-router.use('/selected-temas', selectedTeamRoutes);
+router.use('/selected-teams', selectedTeamRoutes);
 router.use('/selected-players', selectedPlayerRoutes);
 router.use('/notifications', notificationsRoutes);
 router.use("/rapid-football", rapidApiRoute);
