@@ -30,7 +30,8 @@ export const updateStreamingSourcesOrder = async (
   next: NextFunction
 ) => {
   try {
-    const streams = req.body;
+    const { streams } = req.body;
+
 
     if (!Array.isArray(streams)) {
       return res.status(400).json(handleResponse(400, 'Invalid data format'));
@@ -38,9 +39,9 @@ export const updateStreamingSourcesOrder = async (
 
     // Iterate over each match and update its position
     await Promise.all(
-      streams.map(async (stream: { _id: string; position: number }) => {
+      streams.map(async (stream: { id: string; position: number }) => {
         await dbActions.update(Stream, {
-          query: { _id: stream._id },
+          query: { _id: stream.id },
           update: { position: stream.position },
         });
       })

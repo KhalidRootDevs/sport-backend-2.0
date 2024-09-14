@@ -21,6 +21,7 @@ export const getLiveMatches = async (req: Request, res: Response, next: NextFunc
     const matches = await dbActions.readAll(LiveMatch, {
       query,
       sort: { position: 1 },
+      includes: ['streaming_sources'],
       pagination: { page, limit },
     });
 

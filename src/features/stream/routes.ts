@@ -9,7 +9,7 @@ const router = Router();
 router.get('/find/:matchId', getStreamingSources);
 
 // Sort streaming sources
-router.put(
+router.patch(
   '/sort',
   authenticate,
   authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),

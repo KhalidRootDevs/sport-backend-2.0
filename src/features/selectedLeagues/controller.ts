@@ -130,14 +130,14 @@ export const deleteSelectedLeague = async (req: Request, res: Response, next: Ne
 
 export const sortByPosition = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { league } = req.body;
+    const { leagues } = req.body;
 
-    if (!league || league.length === 0) {
+    if (!leagues || leagues.length === 0) {
       return res.status(400).json(handleResponse(400, 'Request body is empty or invalid'));
     }
 
     await Promise.all(
-      league.map(async (league: { id: string; position: number }) => {
+      leagues.map(async (league: { id: string; position: number }) => {
         const sortedLeagues = await SelectedLeagues.findByIdAndUpdate(league.id, {
           position: league.position,
         });

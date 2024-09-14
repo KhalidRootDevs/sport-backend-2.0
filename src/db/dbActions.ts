@@ -7,7 +7,7 @@ interface PaginationOptions {
 
 interface ReadAllOptions<T> {
   query?: FilterQuery<T>;
-  projection?: Record<string, 1 | 0>; // Updated type for projection
+  projection?: Record<string, 1 | 0>;
   sort?: Record<string, 1 | -1>;
   filter?: FilterQuery<T>;
   pagination?: PaginationOptions;
