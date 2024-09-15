@@ -92,11 +92,10 @@ export const deleteHighlight = async (req: Request, res: Response, next: NextFun
   }
 };
 
-
 export const deleteAllHighlights = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await dbActions.deleteMany(Highlight, {
-      query: {}
+      query: {},
     });
     res.status(200).json(handleResponse(200, 'All highlights items deleted successfully'));
   } catch (err) {

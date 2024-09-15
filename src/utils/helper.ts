@@ -17,33 +17,39 @@ export const handleResponse = (status: number, message: string, data?: any) => (
   data,
 });
 
-export const getSlugify = (inputString: string): string => inputString
-  .toString()
-  .toLowerCase()
-  .trim()
-  .replace(/[^\w-]+/g, '')
-  .replace(/--+/g, '-');
-
+export const getSlugify = (inputString: string): string =>
+  inputString
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-');
 
 export const getCategories = async function () {
   try {
-    const filter = 'id name logo'
+    const filter = 'id name logo';
 
     // selectedLeagues
-    let selectedLeagues: any = await SelectedLeagues.find({ status: true }).select(filter)
-    selectedLeagues = selectedLeagues.map((league: any) => ({ ...league.toObject(), type: 'leagues' }))
+    let selectedLeagues: any = await SelectedLeagues.find({ status: true }).select(filter);
+    selectedLeagues = selectedLeagues.map((league: any) => ({
+      ...league.toObject(),
+      type: 'leagues',
+    }));
 
     // selectedTeams
-    let selectedTeams: any = await SelectedTeam.find({ status: true }).select(filter)
-    selectedTeams = selectedTeams.map((team: any) => ({ ...team.toObject(), type: 'teams' }))
+    let selectedTeams: any = await SelectedTeam.find({ status: true }).select(filter);
+    selectedTeams = selectedTeams.map((team: any) => ({ ...team.toObject(), type: 'teams' }));
 
     // selectedPlayers
-    let selectedPlayers: any = await SelectedPlayer.find({ status: true }).select(filter)
-    selectedPlayers = selectedPlayers.map((player: any) => ({ ...player.toObject(), type: 'players' }))
+    let selectedPlayers: any = await SelectedPlayer.find({ status: true }).select(filter);
+    selectedPlayers = selectedPlayers.map((player: any) => ({
+      ...player.toObject(),
+      type: 'players',
+    }));
 
-    return [...selectedLeagues, ...selectedTeams, ...selectedPlayers]
+    return [...selectedLeagues, ...selectedTeams, ...selectedPlayers];
   } catch (error) {
-    console.error(error)
-    return []
+    console.error(error);
+    return [];
   }
-}
+};

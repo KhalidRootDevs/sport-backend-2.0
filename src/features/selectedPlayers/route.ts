@@ -41,6 +41,11 @@ router.delete(
   deletePlayer
 );
 
-router.get('/search', authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), searchPlayers);
+router.get(
+  '/search',
+  authenticate,
+  authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),
+  searchPlayers
+);
 
 export default router;

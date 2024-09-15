@@ -27,6 +27,11 @@ router.put('/update/:id', authenticate, updateHighlight);
 // Delete a highlight by ID
 router.delete('/delete/:id', authenticate, deleteHighlight);
 
-router.delete("/deleta-all", authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), deleteAllHighlights);
+router.delete(
+  '/deleta-all',
+  authenticate,
+  authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),
+  deleteAllHighlights
+);
 
 export default router;

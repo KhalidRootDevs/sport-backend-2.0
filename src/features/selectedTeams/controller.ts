@@ -148,8 +148,6 @@ export const sortTeams = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-
-
 export const searchTeams = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const search_query = req.query.q as string;
@@ -159,7 +157,10 @@ export const searchTeams = async (req: Request, res: Response, next: NextFunctio
     }
 
     const { data } = await fetchFootballData(`/teams/search/${encodeURIComponent(search_query)}`);
-    const filtered = data.length > 0 ? data.map((d: any) => ({ id: d.id, name: d.name, logo: d.image_path })) : data;
+    const filtered =
+      data.length > 0
+        ? data.map((d: any) => ({ id: d.id, name: d.name, logo: d.image_path }))
+        : data;
 
     res.status(200).json(handleResponse(200, 'Teams search results', filtered));
   } catch (error) {

@@ -87,7 +87,6 @@ export const deleteAllNews = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-
 export const fetchNewsManually = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const count = await NinetyMins();

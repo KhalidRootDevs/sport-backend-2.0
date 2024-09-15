@@ -152,7 +152,6 @@ export const sortPlayers = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-
 export const searchPlayers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const search_query = req.query.q as string;
@@ -163,7 +162,10 @@ export const searchPlayers = async (req: Request, res: Response, next: NextFunct
 
     const { data } = await fetchFootballData(`/players/search/${encodeURIComponent(search_query)}`);
 
-    const filtered = data.length > 0 ? data.map((d: any) => ({ id: d.id, name: d.name, logo: d.image_path })) : data;
+    const filtered =
+      data.length > 0
+        ? data.map((d: any) => ({ id: d.id, name: d.name, logo: d.image_path }))
+        : data;
 
     res.status(200).json(handleResponse(200, 'Player search results', filtered));
   } catch (error) {

@@ -1,6 +1,13 @@
 import { Router } from 'express';
 import { authenticate, authorizeRoles } from '../../middlewares/authenticate';
-import { createNews, deleteAllNews, deleteNews, fetchNewsManually, getAllNews, getNewsById } from './controller';
+import {
+  createNews,
+  deleteAllNews,
+  deleteNews,
+  fetchNewsManually,
+  getAllNews,
+  getNewsById,
+} from './controller';
 import { UserRole } from '../user/model';
 
 const router = Router();
@@ -9,7 +16,12 @@ router.post('/create', authenticate, createNews);
 router.get('/all', authenticate, getAllNews);
 router.get('/find/:id', authenticate, getNewsById);
 router.delete('/delete/:id', authenticate, deleteNews);
-router.delete("/deleta-all", authenticate, authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]), deleteAllNews);
-router.get("/fetch-news", fetchNewsManually);
+router.delete(
+  '/deleta-all',
+  authenticate,
+  authorizeRoles([UserRole.ADMIN, UserRole.MODERATOR]),
+  deleteAllNews
+);
+router.get('/fetch-news', fetchNewsManually);
 
 export default router;

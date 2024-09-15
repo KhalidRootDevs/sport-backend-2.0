@@ -3,13 +3,13 @@ import { NinetyMins } from '../90min';
 
 // every hour fetch news from 90min
 cron.schedule('0 * * * *', async () => {
-    try {
-        console.log('fetching news from 90min', new Date())
-        await NinetyMins()
-    } catch (e: any) {
-        console.log(e.message)
-    }
-})
+  try {
+    console.log('fetching news from 90min', new Date());
+    await NinetyMins();
+  } catch (e: any) {
+    console.log(e.message);
+  }
+});
 
 // // every day at midnight send notifications
 // cron.schedule('0 0 * * *', async () => {
