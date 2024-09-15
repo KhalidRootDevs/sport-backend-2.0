@@ -4,6 +4,7 @@ import { querySchema } from '../../types';
 import { handleResponse } from '../../utils/helper'; // Adjust the path as necessary
 import News from './model';
 import { newsSchema } from './validator';
+import { NinetyMins } from '../../services/90min';
 
 // Create a new news item
 export const createNews = async (req: Request, res: Response, next: NextFunction) => {
@@ -80,6 +81,17 @@ export const deleteAllNews = async (req: Request, res: Response, next: NextFunct
       query: {},
     });
     res.status(200).json(handleResponse(200, 'All news items deleted successfully'));
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+
+export const fetchNewsManually = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const count = await NinetyMins();
+    return res.status(200).json(handleResponse(200, `${count} News Added`));
   } catch (err) {
     console.log(err);
     next(err);

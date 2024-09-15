@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 config();
 import app from './app';
 import connectDB from './db/database';
+import "../src/services/cron"
 
 (async () => {
   try {
